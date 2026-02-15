@@ -30,21 +30,16 @@ int main() {
 
 	for (const auto& entry : fs::directory_iterator(images_dir)) {
 		std::string img_path = entry.path().string();
-
 		if (!fs::exists(img_path)) {
 			std::cerr << "File does not exist: " << img_path << std::endl;
 		}
-
 		img_crop(img_path, cropped_path);
-
-
 
 		fs::remove_all(cropped_save_dir);
 		if (fs::exists(cropped_save_dir)) {
 			std::cerr << "Error: Could not remove directory 'Cropped'." << std::endl;
 			return 1;
 		}
-
 		return 0;
 	}
 }

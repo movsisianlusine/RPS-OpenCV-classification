@@ -9,14 +9,31 @@
 
 namespace fs = std::filesystem;
 
-void img_crop(std::string img_path, fs::path cropped_save_path) {
+std::vector<bool> get_containsObj(const cv::Mat& img) {
+	int height = img.rows;
+	int width = img.cols;
+	std::vector<bool> containsObj(height, false);
+	const int white_threshold = 240;
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			cv::Vec3b pixel = img.at<cv::Vec3b>(y, x);
+			if (pixel[0] < white_threshold || pixel[1] < white_threshold || pixel[2] < white_threshold) {
+				containsObj[y] = true;
+				break;
+			}
+		}
+	}
+	return containsObj;
+}
+
+void img_crop(const std::string& img_path, const fs::path& cropped_save_path) {
 	if (!cropped_save_path.empty()) {
 		for (const auto& dir : fs::directory_iterator(cropped_save_path)) {
 			fs::remove_all(dir.path());
 		}
 	}
 
-	cv::Mat img(cv::imread(img_path));
+	cv::Mat img(cv::imread(img_path));	
 	if (img.empty()) {
 		std::cerr << "Error: Could not open or find the image at " << img_path << std::endl;
 		return;
@@ -24,19 +41,7 @@ void img_crop(std::string img_path, fs::path cropped_save_path) {
 
 	int height = img.rows;
 	int width = img.cols;
-
-	std::vector<bool> containsObj(height, false);
-
-	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
-			cv::Vec3b pixel = img.at<cv::Vec3b>(y, x);
-			if (pixel[0] < 240 || pixel[1] < 240 || pixel[2] < 240) {
-				containsObj[y] = true;
-				break;
-			}
-		}
-	}
-
+	std::vector<bool> containsObj = get_containsObj(img);
 	int startY = 0;
 	int endY = 0;
 	bool inObj = false;
@@ -47,14 +52,12 @@ void img_crop(std::string img_path, fs::path cropped_save_path) {
 			startY = y;
 			inObj = true;
 		}
-
 		if ((!containsObj[y] || y == height - 1) && inObj) {
 			endY = y;
-
-			if (endY - startY < 20) {
+			const int minHeight = 20;
+			if (endY - startY < minHeight) {
 				inObj = false;
 				continue;
-
 			}
 			cv::Rect left_sign(0, startY, width / 2, endY - startY);
 			cv::Rect right_sign(width / 2, startY, width / 2, endY - startY);
