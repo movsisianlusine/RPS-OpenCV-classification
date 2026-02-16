@@ -10,20 +10,23 @@
 namespace fs = std::filesystem;
 
 std::vector<bool> get_containsObj(const cv::Mat& img) {
-	int height = img.rows;
-	int width = img.cols;
-	std::vector<bool> containsObj(height, false);
+	const int height = img.rows;
 	const int white_threshold = 240;
+	std::vector<bool> contains_obj(height, false);
+
 	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
-			cv::Vec3b pixel = img.at<cv::Vec3b>(y, x);
-			if (pixel[0] < white_threshold || pixel[1] < white_threshold || pixel[2] < white_threshold) {
-				containsObj[y] = true;
-				break;
-			}
-		}
+		const cv::Vec3b* row_begin = img.ptr<cv::Vec3b>(y);
+		const cv::Vec3b* row_end = row_begin + img.cols;
+
+		bool has_object = std::any_of(row_begin, row_end, [white_threshold](const cv::Vec3b& pixel) {
+			return pixel[0] < white_threshold ||
+				pixel[1] < white_threshold ||
+				pixel[2] < white_threshold;
+		});
+		contains_obj[y] = has_object;
 	}
-	return containsObj;
+
+	return contains_obj;
 }
 
 void img_crop(const std::string& img_path, const fs::path& cropped_save_path) {
@@ -39,28 +42,28 @@ void img_crop(const std::string& img_path, const fs::path& cropped_save_path) {
 		return;
 	}
 
-	int height = img.rows;
-	int width = img.cols;
-	std::vector<bool> containsObj = get_containsObj(img);
-	int startY = 0;
-	int endY = 0;
-	bool inObj = false;
+	const int height = img.rows;
+	const int width = img.cols;
+	const std::vector<bool> containsObj = get_containsObj(img);
+	int start_y = 0;
+	int end_y = 0;
+	bool in_obj = false;
 	int round = 1;
 
 	for (int y = 0; y < height; y++) {
-		if (containsObj[y] && !inObj) {
-			startY = y;
-			inObj = true;
+		if (containsObj[y] && !in_obj) {
+			start_y = y;
+			in_obj = true;
 		}
-		if ((!containsObj[y] || y == height - 1) && inObj) {
-			endY = y;
+		if ((!containsObj[y] || y == height - 1) && in_obj) {
+			end_y = y;
 			const int minHeight = 20;
-			if (endY - startY < minHeight) {
-				inObj = false;
+			if (end_y - start_y < minHeight) {
+				in_obj = false;
 				continue;
 			}
-			cv::Rect left_sign(0, startY, width / 2, endY - startY);
-			cv::Rect right_sign(width / 2, startY, width / 2, endY - startY);
+			cv::Rect left_sign(0, start_y, width / 2, end_y - start_y);
+			cv::Rect right_sign(width / 2, start_y, width / 2, end_y - start_y);
 
 			cv::Mat left_img = img(left_sign);
 			cv::Mat right_img = img(right_sign);
@@ -75,7 +78,7 @@ void img_crop(const std::string& img_path, const fs::path& cropped_save_path) {
 			cv::imwrite(right_path.string(), right_img);
 
 			round++;
-			inObj = false;
+			in_obj = false;
 		}
 	}
 }
