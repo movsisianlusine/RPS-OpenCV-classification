@@ -35,11 +35,11 @@ int main() {
 		}
 		img_crop(img_path, cropped_path);
 
-		/*fs::remove_all(cropped_save_dir);
+		fs::remove_all(cropped_save_dir);
 		if (fs::exists(cropped_save_dir)) {
 			std::cerr << "Error: Could not remove directory 'Cropped'." << std::endl;
 			return 1;
-		}*/
+		}
 		return 0;
 	}
 }
