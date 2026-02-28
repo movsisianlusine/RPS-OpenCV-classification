@@ -6,7 +6,11 @@
 #include <string>
 
 
-std::string img_classify(const cv::Mat& img) {
+
+Sign img_classify(const cv::Mat& img) {
+	constexpr int SATURATION_THRESHOLD = 15;
+	constexpr int PAPER_BRIGHTNESS_THRESHOLD = 200;
+
 	cv::Scalar avg = cv::mean(img);
 
 	double r = avg[0];
@@ -17,19 +21,16 @@ std::string img_classify(const cv::Mat& img) {
 	double maxVal = std::max({ r, g, b });
 	double minVal = std::min({ r, g, b });
 	double diff = maxVal - minVal;
-
 	double brightness = (r + g + b) / 3.0;
 
 	//diff < 15 -> grey/white
-	if (diff < 15) {
-		if (brightness > 200) {
-			return "Paper";
+	if (diff < SATURATION_THRESHOLD) {
+		if (brightness > PAPER_BRIGHTNESS_THRESHOLD) {
+			return Sign::Paper;
 		}
 		else {
-			return "Rock";
+			return Sign::Rock;
 		}
 	}
-	else {
-		return "Scissors";
-	}
+	return Sign::Scissors;
 }

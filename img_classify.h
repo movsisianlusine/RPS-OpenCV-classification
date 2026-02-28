@@ -4,4 +4,11 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 
-std::string img_classify(const cv::Mat& img);
+enum class Sign {
+	Rock,
+	Paper,
+	Scissors
+}; 
+
+Sign img_classify(const cv::Mat& img);
+
