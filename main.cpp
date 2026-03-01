@@ -33,7 +33,15 @@ int main() {
 		if (!fs::exists(img_path)) {
 			std::cerr << "File does not exist: " << img_path << std::endl;
 		}
-		img_crop(img_path, cropped_path);
+		try
+		{
+			img_crop(img_path, cropped_path);
+		}
+		catch (const std::exception&)
+		{
+			std::cerr << "Error cropping image: " << img_path << std::endl;
+		}
+	
 
 		fs::remove_all(cropped_save_dir);
 		if (fs::exists(cropped_save_dir)) {
