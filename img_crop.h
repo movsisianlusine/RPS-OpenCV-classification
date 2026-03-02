@@ -4,4 +4,4 @@
 
 namespace fs = std::filesystem;
 
-void img_crop(std::string img_path, fs::path cropped_save_path);
+void img_crop(const std::string& img_path, const fs::path& cropped_save_path);
