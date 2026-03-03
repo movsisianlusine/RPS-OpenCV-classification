@@ -13,6 +13,8 @@ file(GLOB_RECURSE SOURCES
     main.cpp
     img_crop.h
     img_crop.cpp
+    img_classify.cpp
+    img_classify.h
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
