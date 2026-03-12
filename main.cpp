@@ -37,11 +37,10 @@ int main() {
 		{
 			img_crop(img_path, cropped_path);
 		}
-		catch (const std::exception&)
+		catch (const std::exception& ex)
 		{
-			std::cerr << "Error cropping image: " << img_path << std::endl;
+			std::cerr << "Error cropping image: " << img_path << " - " << ex.what() << std::endl;
 		}
-	
 
 		fs::remove_all(cropped_save_dir);
 		if (fs::exists(cropped_save_dir)) {
