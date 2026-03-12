@@ -30,7 +30,7 @@ void img_crop(std::string img_path, fs::path cropped_save_path) {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             cv::Vec3b pixel = img.at<cv::Vec3b>(y, x);
-            if (pixel[0] < MIN_COLOR  pixel[1] < MIN_COLOR  pixel[2] < MIN_COLOR) {
+            if (pixel[0] < MIN_COLOR ||  pixel[1] < MIN_COLOR || pixel[2] < MIN_COLOR) {
                 containsObj[y] = true;
                 break;
             }
