@@ -10,7 +10,7 @@
 
 namespace fs = std::filesystem;
 
-std::vector<bool> ImageCropper::get_contains_obj(const cv::Mat& img) {
+std::vector<bool> ImageCropper::get_contains_obj(const cv::Mat& img)  const {
     const int height = img.rows;
     const int white_threshold = 255;
     std::vector<bool> contains_obj(height, false);
@@ -32,7 +32,7 @@ std::vector<bool> ImageCropper::get_contains_obj(const cv::Mat& img) {
 
 
 
-void SimpleImageCropper::img_crop(const std::string& img_path, const fs::path& cropped_save_path) {
+void SimpleImageCropper::img_crop(const std::string& img_path, const fs::path& cropped_save_path) const {
     if (!cropped_save_path.empty()) {
         for (const auto& dir : fs::directory_iterator(cropped_save_path)) {
             fs::remove_all(dir.path());
@@ -94,7 +94,7 @@ void SimpleImageCropper::img_crop(const std::string& img_path, const fs::path& c
     }
 }
 
-void ComplexImageCropper::img_crop(const std::string& img_path, const fs::path& cropped_save_path) {
+void ComplexImageCropper::img_crop(const std::string& img_path, const fs::path& cropped_save_path) const {
         if (fs::exists(cropped_save_path)) {
             fs::remove_all(cropped_save_path);
         }
@@ -118,6 +118,9 @@ void ComplexImageCropper::img_crop(const std::string& img_path, const fs::path& 
         int round_left = 1;
         int round_right = 1;
         const int min_height = 5;
+        constexpr const char* LEFT_PREFIX = "left_half_";
+        constexpr const char* RIGHT_PREFIX = "right_half_";
+        constexpr const char* EXT = ".png";
 
         for (int y = 0; y < img.rows; y++) {
             if (contains_obj_left[y] && !in_obj_left) {
@@ -128,7 +131,7 @@ void ComplexImageCropper::img_crop(const std::string& img_path, const fs::path& 
                 int h = y - start_y_left;
                 if (h >= min_height) {
                     cv::Rect left_sign(0, start_y_left, img.cols / 2, h);
-                    std::string save_path = (cropped_save_path / ("left_half_" + std::to_string(round_left) + ".png")).string();
+                    std::string save_path = (cropped_save_path / (LEFT_PREFIX  + std::to_string(round_left) + EXT)).string();
                     cv::imwrite(save_path, img(left_sign));
                     round_left++;
                 }
@@ -143,7 +146,7 @@ void ComplexImageCropper::img_crop(const std::string& img_path, const fs::path& 
                 int h = y - start_y_right;
                 if (y - start_y_right >= min_height) {
                     cv::Rect right_sign(img.cols / 2, start_y_right, img.cols / 2, y - start_y_right);
-                    std::string save_path = (cropped_save_path / ("right_half_" + std::to_string(round_right) + ".png")).string();
+                    std::string save_path = (cropped_save_path / (RIGHT_PREFIX + std::to_string(round_right) + EXT)).string();
                     cv::imwrite(save_path, img(right_sign));
                     round_right++;
                 }

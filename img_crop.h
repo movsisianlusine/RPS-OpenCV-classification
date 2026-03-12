@@ -11,18 +11,18 @@ namespace fs = std::filesystem;
 
 class ImageCropper {
 public:
-	virtual void img_crop(const std::string& img_path, const fs::path& cropped_save_path) = 0;
-	std::vector<bool> ImageCropper::get_contains_obj(const cv::Mat& img);
+	virtual void img_crop(const std::string& img_path, const fs::path& cropped_save_path) const = 0;
+	std::vector<bool> ImageCropper::get_contains_obj(const cv::Mat& img) const;
 	virtual ~ImageCropper() = default;
 };
 
 class SimpleImageCropper : public ImageCropper{
 public:
-	void img_crop(const std::string& img_path, const fs::path& cropped_save_path) override;
+	void img_crop(const std::string& img_path, const fs::path& cropped_save_path) const override;
 };
 
 class ComplexImageCropper : public ImageCropper {
 public:
-	void img_crop(const std::string& img_path, const fs::path& cropped_save_dir) override;
+	void img_crop(const std::string& img_path, const fs::path& cropped_save_dir) const override;
 };
 
