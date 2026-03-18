@@ -53,10 +53,10 @@ int main(int argc, char** argv) {
 		}
 	}
 	
-	//fs::remove_all(cropped_save_dir);
-	//if (fs::exists(cropped_save_dir)) {
-	//	std::cerr << "Error: Could not remove directory 'Cropped'." << std::endl;
-	//	return 1;
-	//}
+	fs::remove_all(cropped_save_dir);
+	if (fs::exists(cropped_save_dir)) {
+		std::cerr << "Error: Could not remove directory 'Cropped'." << std::endl;
+		return 1;
+	}
 
 }
