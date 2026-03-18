@@ -10,7 +10,6 @@
 namespace fs = std::filesystem;
 
 int main() {
-
     fs::path images_dir = fs::path(PROJECT_ROOT_DIR) / "F2";
     fs::path cropped_save_dir = fs::path(PROJECT_ROOT_DIR) / "Cropped";
 
