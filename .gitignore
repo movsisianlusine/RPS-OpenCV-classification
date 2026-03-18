@@ -1,2 +1,9 @@
-.vs/
+.gitmodules
+.vs
 out/
+.vs/
+launch.vs.json
+launch.vs.json
+Cropped/
+cxxopts.hpp
+CMakeSettings.json
