@@ -19,8 +19,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${OpenCV_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/external/cxxopts/include
 )
+
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
