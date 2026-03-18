@@ -55,8 +55,7 @@ int main(int argc, char** argv) {
 	
 	fs::remove_all(cropped_save_dir);
 	if (fs::exists(cropped_save_dir)) {
-		std::cerr << "Error: Could not remove directory 'Cropped'." << std::endl;
-		return 1;
+		throw std::runtime_error("Error: Could not remove directory 'Cropped' at " + cropped_save_dir.string());
 	}
 
 }
