@@ -33,11 +33,11 @@ std::vector<bool> ImageCropper::get_contains_obj(const cv::Mat& img)  const {
 
 
 void SimpleImageCropper::img_crop(const std::string& img_path, const fs::path& cropped_save_path) const {
-    if (!cropped_save_path.empty()) {
-        for (const auto& dir : fs::directory_iterator(cropped_save_path)) {
-            fs::remove_all(dir.path());
-        }
+    if (fs::exists(cropped_save_path)) {
+        fs::remove_all(cropped_save_path);
     }
+    fs::create_directories(cropped_save_path);
+
 
     cv::Mat img(cv::imread(img_path));
     if (img.empty()) {
@@ -95,10 +95,10 @@ void SimpleImageCropper::img_crop(const std::string& img_path, const fs::path& c
 }
 
 void ComplexImageCropper::img_crop(const std::string& img_path, const fs::path& cropped_save_path) const {
-        if (fs::exists(cropped_save_path)) {
-            fs::remove_all(cropped_save_path);
-        }
-        fs::create_directories(cropped_save_path);
+    if (fs::exists(cropped_save_path)) {
+        fs::remove_all(cropped_save_path);
+    }
+    fs::create_directories(cropped_save_path);
 
         cv::Mat img(cv::imread(img_path));
         if (img.empty()) {

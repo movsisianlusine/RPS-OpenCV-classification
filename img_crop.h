@@ -12,7 +12,7 @@ namespace fs = std::filesystem;
 class ImageCropper {
 public:
 	virtual void img_crop(const std::string& img_path, const fs::path& cropped_save_path) const = 0;
-	std::vector<bool> ImageCropper::get_contains_obj(const cv::Mat& img) const;
+	std::vector<bool> get_contains_obj(const cv::Mat& img) const;
 	virtual ~ImageCropper() = default;
 };
 
