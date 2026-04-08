@@ -9,9 +9,8 @@ set(OpenCV_DIR "C:/opencv/build/x64/vc16/lib")
 
 find_package(OpenCV REQUIRED)
 
-file(GLOB_RECURSE SOURCES 
+set(SOURCES
     main.cpp
-    img_crop.h
     img_crop.cpp
 )
 
@@ -19,11 +18,11 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
     ${OpenCV_INCLUDE_DIRS}
+    ${CMAKE_SOURCE_DIR}/CLI11/include
 )
-
 
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
-target_compile_definitions(RSP_OpenCV_Classification PRIVATE
+target_compile_definitions(${PROJECT_NAME} PRIVATE
     PROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}"
 )
